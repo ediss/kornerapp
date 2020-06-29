@@ -27,7 +27,7 @@
                     <div class="card-footer bg-transparent border text-center">
                         <div class="number w-100">
                             <span class="minus">-</span>
-                            <input type="text" value="0" name="quantity_{{$product->id}}">
+                            <input type="text" class="quantity" value="0" name="quantity_{{$product->id}}">
                             <span class="plus">+</span>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
         @endforeach
 
 
-        <input type="submit">
+        <input type="submit" class="btn btn-success w-100" value="Unesi">
     </form>
 
 </div>

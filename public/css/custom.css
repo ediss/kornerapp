@@ -12,7 +12,7 @@ span {cursor:pointer; }
     text-align: center;
     font-weight: bolder;
 }
-input{
+.quantity{
     height:34px;
     width: 100px;
     text-align: center;
