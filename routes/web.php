@@ -37,3 +37,4 @@ Route::get('/password/reset/{token}', 'Auth\ResetPasswordController@showResetFor
 
 Route::any('/home', 'HomeController@index')->name('home');
 Route::any('/statistic/{date}', 'HomeController@statistic')->name('profit.statistic');
+Route::any('/bills/{date?}', 'HomeController@bills')->name('profit.bills');

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Profit;
 use Carbon\Carbon;
+use DB;
+
 
 
 
@@ -65,15 +67,8 @@ class HomeController extends Controller
 
             }
 
-            return redirect()->route('profit.statistic', [Carbon::now()]);
-
-
-            $kolicina = $request->input('quantity');
-            // $kolicina2 = $request->input('quantity');
-
-            // foreach($kolicina as $k) {
-            //     echo $k. " ";
-            // }
+            // return redirect()->route('profit.statistic', [Carbon::now()]);
+            return redirect()->route('profit.bills');
 
         }
 
@@ -89,6 +84,28 @@ class HomeController extends Controller
 
         return view("statistic", [
             'profits' => $profits
+        ]);
+
+    }
+
+    public static function getDrinkName($id) {
+        $product = Product::where('id','=', $id)->first();
+
+        return $product->name;
+
+        // return Product::where('id', '=', $id)->pluck('name')->get();
+    }
+
+    public function bills($date = null) {
+        //$bills = Profit::sum('total')->groupBy('order_date')->get();
+        $bills = DB::table('profits')
+                ->selectRaw("JSON_ARRAYAGG(profits.product_id) as drinks, JSON_ARRAYAGG(quantity) as quantity, SUM(total) AS total, order_date")
+                ->groupBy('order_date')
+                ->orderBy('order_date', 'DESC')
+                ->get();
+
+        return view("bills", [
+            'bills' => $bills
         ]);
 
     }
