@@ -96,13 +96,35 @@ class HomeController extends Controller
         // return Product::where('id', '=', $id)->pluck('name')->get();
     }
 
-    public function bills($date = null) {
-        //$bills = Profit::sum('total')->groupBy('order_date')->get();
-        $bills = DB::table('profits')
-                ->selectRaw("JSON_ARRAYAGG(profits.product_id) as drinks, JSON_ARRAYAGG(quantity) as quantity, SUM(total) AS total, order_date")
-                ->groupBy('order_date')
-                ->orderBy('order_date', 'DESC')
-                ->get();
+    public function bills(Request $request) {
+
+        $date = $request->input('date');
+
+
+
+        if ($request->isMethod('post')) {
+
+            // dd($date);
+            $bills = DB::table('profits')
+            ->selectRaw("JSON_ARRAYAGG(profits.product_id) as drinks, JSON_ARRAYAGG(quantity) as quantity, SUM(total) AS total, order_date")
+            ->whereBetween('order_date', [$date." 00:00:00", $date. " 23:59:59"])
+            ->groupBy('order_date')
+            ->orderBy('order_date', 'DESC')
+            ->get();
+
+            
+        }else {
+            $bills = DB::table('profits')
+            ->selectRaw("JSON_ARRAYAGG(profits.product_id) as drinks, JSON_ARRAYAGG(quantity) as quantity, SUM(total) AS total, order_date")
+
+            ->groupBy('order_date')
+            ->orderBy('order_date', 'DESC')
+            ->get();
+        }
+
+
+
+        // dd($bills);
 
         return view("bills", [
             'bills' => $bills
